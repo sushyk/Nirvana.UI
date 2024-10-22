@@ -1,10 +1,26 @@
-import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
+import {
+	computed,
+	effect,
+	ReadonlySignal,
+	Signal,
+	signal,
+} from "@preact/signals-react";
 
-function App() {
-	const [count, setCount] = useState(0);
+function App(): JSX.Element {
+	const count: Signal<number> = signal(0);
+
+	const countSquareRoot: ReadonlySignal<number> = computed(() =>
+		Math.sqrt(count.value)
+	);
+
+	effect(() => console.log(`Square root of ${count} is ${countSquareRoot}`));
+
+	const handleClick = () => {
+		count.value += 1;
+	};
 
 	return (
 		<>
@@ -23,9 +39,7 @@ function App() {
 			<h1>Vite + React</h1>
 			<div className="card">
 				Button has been clicked {count} times
-				<button onClick={() => setCount((count) => count + 1)}>
-					Click
-				</button>
+				<button onClick={handleClick}>Click</button>
 				<p>
 					Edit <code>src/App.tsx</code> and save to test HMR
 				</p>
